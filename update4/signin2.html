@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Roll Call</title>
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -8,10 +9,10 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style>
 body {
-    font-family: 'Fira Sans';font-size: 22px;
+    font-family: 'Fira Sans';font-size: 16pt;
     background-color: #F8F8F8;
 }
-button {
+/*button {
     background-color: #dd4f44; 
     border: none;
     color: white;
@@ -21,8 +22,7 @@ button {
     display: inline-block;
     font-size: 20px;
 	width: 50%;
-} 
-
+}*/
 	
 input[type=text], input[type=password] {
     width: 70%;
@@ -30,8 +30,12 @@ input[type=text], input[type=password] {
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
-	font-size: 16px;
+	font-size: 16pt;
     background: #F8F8F8;
+}
+
+input[type=password] {
+    margin-bottom: 40px;
 }
 
 input[type=text]:focus, input[type=password]:focus {
@@ -39,7 +43,7 @@ input[type=text]:focus, input[type=password]:focus {
     outline: none;
 }
 	
-button {
+.my-button {
     background-color: #dd4f44;
 	width: 25%;
     color: white;
@@ -49,6 +53,14 @@ button {
     cursor: pointer;
     width: 40%;
     box-shadow: -3px 3px 10px #888888;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+
+.my-button:hover {
+    opacity: 0.8;
+    text-decoration: none;
+    color: white;
 }
 	
 button:hover {
@@ -60,6 +72,11 @@ button:hover {
     width: 100%;
     background-color: #424242;
     margin-top: 0px;
+    padding-left: 10px;
+    font-size: 34pt;
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
 }
  #signin {
     text-align: center;
@@ -67,7 +84,12 @@ button:hover {
     margin-top: 60px;
  }
 
- .jumbotron {
+.welcome {
+    font-size: 34pt;
+    color: #424242;
+}
+
+.jumbotron {
     width: 110%;
 }
 </style>
@@ -75,22 +97,22 @@ button:hover {
 <body>
 <!-- <i class="material-icons" style="font-size:60px;color:#a5171c;">home</i> -->
 <!-- <button background-color="#a5171c"><i class="material-icons" style="color: white">home</i></button> -->
-<div class="container" id="title">
-  <font color=#FFFFFF size="34"> <b> Roll Call </b></font>
+<div class="container" id="title"> 
+    Roll Call
 </div>
 
-<form action="/action_page.php">
+<form action="">
 	<div class="container" id = "signin">
     <div class="jumbotron">
-        <font color=#424242 size="34"> Welcome, please sign in</font>
-        <br>
+        <div class="welcome"> Welcome, please sign in</div>
         <br>
 
 		<input type="text" placeholder="Name" name="uname" required>
 		<br>
 		<input type="password" placeholder="Password" name="psw" required>
 		<br>
-		<button type="submit">Sign In</button>
+        <!--<button type="submit">Sign In</button>-->
+        <a class="my-button" href="./home2.html">Sign In</a>
         </div>
  	</div>
 </center>

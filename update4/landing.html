@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
         <script>
             $(function() {
                 $("#datepicker").datepicker().datepicker("setDate", new Date());
@@ -38,13 +38,13 @@
                         <button class="class-button nav-button">Tutoring</button>
                     </div>
                     <div class="other-buttons">
-                        <button class="scan-button nav-button">
-                            <i class="material-icons">fingerprint</i>
-                            Scanner
-                        </button>
                         <button class="whois-button nav-button">
                             <i class="material-icons">accessibility</i>
                             Who's here?
+                        </button>
+                        <button class="scan-button nav-button" onclick="window.location.href='ready2.html'">
+                            <i class="material-icons">fingerprint</i>
+                            Scanner
                         </button>
                     </div>
                 </div>
