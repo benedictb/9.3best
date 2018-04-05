@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+body {
+    font-family: 'Fira Sans';font-size: 22px;
+}
+button {
+    background-color: #dd4f44; 
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+	width: 25%;
+} 
+
+	
+input[type=text], input[type=password] {
+    width: 25%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+	font-size: 16px;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+	
+button {
+    background-color: #dd4f44;
+	width: 25%;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 10%;
+}
+	
+button:hover {
+    opacity: 0.8;
+}
+
+</style>
+</head>
+<body>
+<!-- <i class="material-icons" style="font-size:60px;color:#a5171c;">home</i> -->
+<!-- <button background-color="#a5171c"><i class="material-icons" style="color: white">home</i></button> -->
+
+<br>
+<br>
+<br>
+<center>
+<br>
+<font color=#a5171c size="34">Welcome to Roll Call</font>
+<br>
+<br>
+<form action="/action_page.php">
+	<div class="container">
+		<input type="text" placeholder="Name" name="uname" required>
+		<br>
+		<input type="password" placeholder="Password" name="psw" required>
+		<br>
+		<button type="submit">Sign In</button>
+ 	</div>
+</center>
+
+</body>
+</html>
