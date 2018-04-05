@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+body {
+    font-family: 'Fira Sans';font-size: 22px;
+    background-color: #F8F8F8;
+}
+button {
+    background-color: #dd4f44; 
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+	width: 50%;
+} 
+
+	
+input[type=text], input[type=password] {
+    width: 70%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+	font-size: 16px;
+    background: #F8F8F8;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+}
+	
+button {
+    background-color: #dd4f44;
+	width: 25%;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 40%;
+    box-shadow: -3px 3px 10px #888888;
+}
+	
+button:hover {
+    opacity: 0.8;
+}
+
+#title {
+    text-align: left;
+    width: 100%;
+    background-color: #424242;
+    margin-top: 0px;
+}
+ #signin {
+    text-align: center;
+    width: 50%;
+    margin-top: 60px;
+ }
+
+ .jumbotron {
+    width: 110%;
+}
+</style>
+</head>
+<body>
+<!-- <i class="material-icons" style="font-size:60px;color:#a5171c;">home</i> -->
+<!-- <button background-color="#a5171c"><i class="material-icons" style="color: white">home</i></button> -->
+<div class="container" id="title">
+  <font color=#FFFFFF size="34"> <b> Roll Call </b></font>
+</div>
+
+<form action="/action_page.php">
+	<div class="container" id = "signin">
+    <div class="jumbotron">
+        <font color=#424242 size="34"> Welcome, please sign in</font>
+        <br>
+        <br>
+
+		<input type="text" placeholder="Name" name="uname" required>
+		<br>
+		<input type="password" placeholder="Password" name="psw" required>
+		<br>
+		<button type="submit">Sign In</button>
+        </div>
+ 	</div>
+</center>
+
+</body>
+</html>
