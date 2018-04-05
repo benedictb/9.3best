@@ -1,0 +1,117 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Fira Sans";
+}
+
+h1 {
+    font-size: 34pt;
+}
+
+p {
+    font-size: 16pt;
+}
+
+.container {
+    height: 100%;
+    
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50px auto;
+    grid-template-areas:
+        "header"
+        "torso";
+}
+
+.header {
+    grid-area: header;
+
+    background-color: #a5171c;
+
+    display: grid;
+    grid-template-columns: 10px 1fr 1fr 1fr 10px;
+    grid-template-rows: 100%;
+    grid-template-areas: ". name search add .";
+}
+
+.name {
+    font-size: 34pt;
+    color: white;
+    grid-area: name;
+    justify-self: start;
+    align-self: center;
+}
+
+.search {
+    padding: 0;
+    margin: 0;
+    height: 25px;
+    grid-area: search;
+    align-self: center;
+    font-size: 16pt;
+}
+
+.add {
+    font-size: 55pt;
+    color: white;
+    grid-area: add;
+    justify-self: end;
+    align-self: center;
+}
+
+.torso {
+    grid-area: torso;
+    
+    display: grid;
+    grid-template-columns: 190px auto;
+    grid-template-rows: 100%;
+    grid-template-areas: "nav main";
+}
+
+.nav {
+    background-color: #e8e8e8;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+        "class-buttons"
+        "other-buttons";
+}
+
+.class-buttons {
+    grid-area: class-buttons;
+    text-align: center;
+}
+
+#datepicker {
+    margin: 0;
+    width: 155px;
+    font-size: 16pt;
+}
+
+.class-label {
+    font-size: 21pt;
+}
+
+.other-buttons {
+    grid-area: other-buttons;
+    align-self: end;
+}
+
+.nav-button {
+    margin: 0;
+    font-size: 16pt;
+    width: 100%;
+    display: block;
+}
+
+
+.main {
+    line-width:
+    grid-area: main;
+    text-align: center;
+}
