@@ -5,9 +5,11 @@ you already know what it is
 - Make sure you have python2 installed
 
 - Install Flask
+
 `pip2 install flask-mysqldb`
 
 - Install MySQL
+
 El Capitan (Homebrew)
 `https://gist.github.com/nrollr/a8d156206fa1e53c6cd6`
 Sierra (Homebrew)
@@ -16,10 +18,12 @@ Download
 `https://dev.mysql.com/downloads/mysql/`
 
 - Setup MySQL
+
 In the project directory, run
 `cp config.skeleton rollcall.config`
 
 - Setup config
+
 On the line with "mysql_password", enter your root mysql password after the semicolon (leave a space between the semicolon and your password) 
 - Same for mysql username (I just used my root and its password)
 
