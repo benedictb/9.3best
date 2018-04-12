@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Roll Call</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+        <script>
+            $(function() {
+                $("#datepicker").datepicker().datepicker("setDate", new Date());
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="name">Roll Call</div>
+                <input class="search" type="text" placeholder="Search for a student">
+                <div class="add">+</div>
+            </div>
+            <div class="torso">
+                <div class="nav">
+                    <div class="class-buttons">
+                        <div class="class-label">Classes</div>
+                        <div class="datepick">
+                            <input type="text" id="datepicker">
+                            <label for="datepicker">
+                                <i class="material-icons">date_range</i>
+                            </label>
+                        </div>
+                        <button class="class-button nav-button">Brain Health</button>
+                        <button class="class-button nav-button">Leadership</button>
+                        <button class="class-button nav-button">LEGO Robotics</button>
+                        <button class="class-button nav-button">Shakespeare</button>
+                        <button class="class-button nav-button">Tutoring</button>
+                    </div>
+                    <div class="other-buttons">
+                        <button class="whois-button nav-button">
+                            <i class="material-icons">accessibility</i>
+                            Who's here?
+                        </button>
+                        <button class="scan-button nav-button" onclick="window.location.href='ready2.html'">
+                            <i class="material-icons">fingerprint</i>
+                            Scanner
+                        </button>
+                    </div>
+                </div>
+                <div class="main">
+                    <h1>Welcome to Roll Call!</h1>
+                    <p>Select an option to the left, search for a student, or add a new member or class.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
