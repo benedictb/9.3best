@@ -1,5 +1,6 @@
 from flask import session, jsonify
 from flaskext.mysql import MySQL
+import json
 
 
 class DB(object):
@@ -11,7 +12,7 @@ class DB(object):
         # MySQL configurations
         app.config['MYSQL_DATABASE_USER'] = config['user']
         app.config['MYSQL_DATABASE_PASSWORD'] = config['mysql_password']
-        # app.config['MYSQL_DATABASE_DB'] = config['database']
+        app.config['MYSQL_DATABASE_DB'] = config['database']
         app.config['MYSQL_DATABASE_HOST'] = '0.0.0.0'
         mysql.init_app(app)
         self.mysql = mysql
