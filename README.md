@@ -33,3 +33,18 @@ To test:
 - go to `http://0.0.0.0:5000` in Chrome
 
 There should be a hello world page
+***** Erin's Notes *****
+- this will not work unless you create a new database in your mysql, please see notes below 
+
+### To see the database (Erin's added notes)
+
+- run `mysql -u <username> - p
+- it will ask for you password
+
+- If you get an error, try running `mysql.server start` and then try again 
+
+-Once mysql is running: 
+	`create database rollcall;`
+	`show databases;`
+- You should now see roll call listed in your databases
+- Add rollcall as the databse name in rollcall.config
