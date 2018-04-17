@@ -8,18 +8,13 @@
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-        <script>
-            $(function() {
-                $("#datepicker").datepicker().datepicker("setDate", new Date());
-            });
-        </script>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <div class="name">Roll Call</div>
+                <div class="name" onClick="window.location.reload()">Roll Call</div>
                 <input class="search" type="text" placeholder="Search for a student">
-                <div class="add">+</div>
+                <button class="add"><i class="material-icons md-34">add</i></button>
             </div>
             <div class="torso">
                 <div class="nav">
@@ -31,11 +26,8 @@
                                 <i class="material-icons">date_range</i>
                             </label>
                         </div>
-                        <button class="class-button nav-button">Brain Health</button>
-                        <button class="class-button nav-button">Leadership</button>
-                        <button class="class-button nav-button">LEGO Robotics</button>
-                        <button class="class-button nav-button">Shakespeare</button>
-                        <button class="class-button nav-button">Tutoring</button>
+                        <div id="classes">
+                        </div>
                     </div>
                     <div class="other-buttons">
                         <button class="whois-button nav-button">
@@ -48,11 +40,12 @@
                         </button>
                     </div>
                 </div>
-                <div class="main">
+                <div id="main" class="main">
                     <h1>Welcome to Roll Call!</h1>
                     <p>Select an option to the left, search for a student, or add a new member or class.</p>
                 </div>
             </div>
         </div>
+        <script src="app.js"></script>
     </body>
 </html>

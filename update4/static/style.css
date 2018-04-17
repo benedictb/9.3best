@@ -34,9 +34,9 @@ p {
     background-color: #424242;
 
     display: grid;
-    grid-template-columns: 10px 1fr 1fr 1fr 10px;
+    grid-template-columns: 10px 1fr 1fr 1fr;
     grid-template-rows: 100%;
-    grid-template-areas: ". name search add .";
+    grid-template-areas: ". name search add";
 }
 
 .name {
@@ -45,6 +45,7 @@ p {
     grid-area: name;
     justify-self: start;
     align-self: center;
+    cursor: pointer;
 }
 
 .search {
@@ -59,12 +60,27 @@ p {
 }
 
 .add {
-    font-size: 55pt;
+    width: 50px;
+    height: 50px;
     color: white;
+    background-color: #dd4f44;
     grid-area: add;
     justify-self: end;
     align-self: center;
+
+    margin: 0;
+    padding: 0;
+    border: none;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    cursor: pointer;
 }
+
+.add:hover {
+    opacity: 0.8;
+}
+
+.material-icons.md-34 { font-size: 34pt; }
 
 .torso {
     grid-area: torso;
