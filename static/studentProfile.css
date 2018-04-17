@@ -1,0 +1,158 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Fira Sans";
+    background-color: #f8f8f8;
+}
+
+h1 {
+    font-size: 34pt;
+}
+
+p {
+    font-size: 16pt;
+}
+
+.container {
+    height: 100%;
+    
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50px auto;
+    grid-template-areas:
+        "header"
+        "torso";
+}
+
+.header {
+    grid-area: header;
+
+    background-color: #424242;
+
+    display: grid;
+    grid-template-columns: 10px 1fr 1fr 1fr 10px;
+    grid-template-rows: 100%;
+    grid-template-areas: ". name search add .";
+}
+
+.name {
+    font-size: 34pt;
+    color: white;
+    grid-area: name;
+    justify-self: start;
+    align-self: center;
+}
+
+.search {
+    background-color: #f8f8f8;
+    padding: 0;
+    margin: 0;
+    height: 25px;
+    grid-area: search;
+    align-self: center;
+    font-size: 16pt;
+    color: #424242;
+}
+
+.add {
+    font-size: 55pt;
+    color: white;
+    grid-area: add;
+    justify-self: end;
+    align-self: center;
+}
+
+.torso {
+    grid-area: torso;
+    
+    display: grid;
+    grid-template-columns: 190px auto;
+    grid-template-rows: 100%;
+    grid-template-areas: "nav main";
+}
+
+.nav {
+    background-color: #eeeeee;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+        "class-buttons"
+        "other-buttons";
+}
+
+.class-buttons {
+    grid-area: class-buttons;
+    text-align: center;
+}
+
+#datepicker {
+    margin: 0;
+    width: 155px;
+    font-size: 16pt;
+    background-color: #f8f8f8;
+    color: #424242;
+}
+
+.datepick {
+    color: #424242;
+}
+
+.class-label {
+    font-size: 21pt;
+    color: #424242;
+}
+
+.other-buttons {
+    grid-area: other-buttons;
+    align-self: end;
+}
+
+.nav-button {
+    margin: 0;
+    font-size: 16pt;
+    width: 100%;
+    display: block;
+    background-color: #dd4f44;
+    color: white;
+    border: none;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    opacity: 0.8;
+}
+
+.main {
+    display: grid; 
+
+    grid-template-columns: 5% 35% 50% 20%;
+    grid-template-rows: 10% 45% 45%;
+    grid-template-areas:
+        "margin1 margin2 margin3 margin4"
+        "margin5 studentPic studentInfo margin6"
+        "margin7 extraInfo classes margin8";
+    
+    color: #424242;
+}
+
+.studentPic {
+    grid-area: studentPic;
+    background-color: #808080;
+}
+
+.studentInfo {
+    grid-area: studentInfo;
+    text-align: center;   
+}
+
+.extraInfo {
+    grid-area: extraInfo;
+    text-align: center;
+}
