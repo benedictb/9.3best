@@ -4,9 +4,6 @@ you already know what it is
 # Backend Setup
 - Make sure you have python2 installed
 
-### Install Flask
-`pip2 install flask-mysqldb`
-
 ### Install MySQL
 
 El Capitan (Homebrew)
@@ -22,6 +19,11 @@ Download
 
 In the project directory, run
 `cp config.skeleton rollcall.config`
+
+
+### Install Flask
+`pip2 install flask-mysqldb`
+
 
 ### Setup config
 
