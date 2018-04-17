@@ -26,5 +26,9 @@ def reset_db():
         return res
 
 
+@app.route('/studentProfile', methods=['POST', 'GET'])
+def studentProfile():
+    return render_template('studentProfile.html')
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
