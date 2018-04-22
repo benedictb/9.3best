@@ -13,10 +13,20 @@ h1 {
     font-size: 34pt;
 }
 
+h2 {
+    margin-top: -10px;
+}
 p {
     font-size: 16pt;
 }
 
+h3 {
+    line-height: 10px;
+}
+
+h4 {
+    line-height: 10px;
+}
 .container {
     height: 100%;
     
@@ -130,29 +140,67 @@ p {
 }
 
 .main {
-    display: grid; 
-
-    grid-template-columns: 5% 35% 50% 20%;
-    grid-template-rows: 10% 45% 45%;
-    grid-template-areas:
-        "margin1 margin2 margin3 margin4"
-        "margin5 studentPic studentInfo margin6"
-        "margin7 extraInfo classes margin8";
-    
+    padding: 40px;
     color: #424242;
 }
 
 .studentPic {
-    grid-area: studentPic;
-    background-color: #808080;
+    background-color: #D3D3D3;
+    width: 350px;
+    float: left;
+    max-height: 500px;
+    height: auto;
+
+}
+.studentPic img{
+
+    width: auto;
+    height: auto;
+    max-width: 300px;
+    max-height: 300px;
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
 }
 
 .studentInfo {
-    grid-area: studentInfo;
-    text-align: center;   
+    text-align: center;
 }
 
 .extraInfo {
-    grid-area: extraInfo;
+    margin-top: -20px;
+    width: 550px;
+    float: right;
+    max-height: 500px;
+    height: auto;
+    text-align: left;
+}
+
+.enrolledClasses {
+    width: 300px;
+    background-color: #E8E8E8;
     text-align: center;
+    padding-bottom: 5px;
+}
+
+.signOutInfo {
+    margin-top: 30px;
+    width: 300px;
+    background-color: #E8E8E8;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.emergencyInfo {
+    overflow: auto;
+    margin-top: 30px;
+    width: 300px;
+    background-color: #E8E8E8;
+    text-align: center;
+    padding-bottom: 5px;
+}
+.enrolledClasses h2, .signOutInfo h2, .emergencyInfo h2 {
+    margin-top: 0px;
+    background-color: #ff8170;
 }
