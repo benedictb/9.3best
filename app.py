@@ -30,5 +30,9 @@ def reset_db():
 def studentProfile():
     return render_template('studentProfile.html')
 
+@app.route('/attendanceRates', methods=['POST', 'GET'])
+def attendanceRates():
+    return render_template('attendanceRates.html')
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

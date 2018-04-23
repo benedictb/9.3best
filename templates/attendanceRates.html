@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Roll Call</title>
+        <link rel="stylesheet" href="../static/attendanceRates.css">
+        <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+        <script>
+            $(function() {
+                $("#datepicker").datepicker().datepicker("setDate", new Date());
+            });
+            $(function() {
+                $("#datepicker2").datepicker().datepicker("setDate", new Date());
+            });
+            $(function() {
+                $("#datepicker3").datepicker().datepicker("setDate", new Date());
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="name">Roll Call</div>
+                <input class="search" type="text" placeholder="Search for a student">
+                <div class="add">+</div>
+            </div>
+            <div class="torso">
+                <div class="nav">
+                    <div class="class-buttons">
+                        <div class="class-label">Classes</div>
+                        <div class="datepick">
+                            <input type="text" id="datepicker">
+                            <label for="datepicker">
+                                <i class="material-icons">date_range</i>
+                            </label>
+                        </div>
+                        <button class="class-button nav-button">Brain Health</button>
+                        <button class="class-button nav-button">Leadership</button>
+                        <button class="class-button nav-button">LEGO Robotics</button>
+                        <button class="class-button nav-button">Shakespeare</button>
+                        <button class="class-button nav-button">Tutoring</button>
+                    </div>
+                    <div class="other-buttons">
+                        <button class="whois-button nav-button">
+                            <i class="material-icons">accessibility</i>
+                            Who's here?
+                        </button>
+                        <button class="scan-button nav-button" onclick="window.location.href='ready2.html'">
+                            <i class="material-icons">fingerprint</i>
+                            Scanner
+                        </button>
+                    </div>
+                </div>
+                <div class="main">
+                    <h1> Shakespeare Class Statistics </h1>
+                    <div class="days">
+                        <div class="daysTitle">
+                            <h3> Day of the Week </h3>
+                        </div>
+                        <div class="btn-group">
+                            <button class="button">Monday</button>
+                            <button class="button">Tuesday</button>
+                            <button class="button">Wednesday</button>
+                            <button class="button">Thursday</button>
+                            <button class="button">Friday</button>           
+                        </div>
+                    </div>
+                    <div class="dates">
+                        <div class="datesTitle">
+                            <h3> Date Range </h3>
+                        </div>
+                        <div class="datepick2">
+                            <input type="text" id="datepicker2">
+                            <label for="datepicker2" id="icon1">
+                                <i class="material-icons">date_range</i>
+                            </label>
+                            <h4> to </h4>
+                            <input type="text" id="datepicker3">
+                            <label for="datepicker3" id="icon2">
+                                <i class="material-icons">date_range</i>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="rates">
+                        <h1> 76% </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
