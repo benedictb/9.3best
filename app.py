@@ -4,7 +4,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from app.db import DB
 import json
 
-
 config = yaml.load(open('rollcall.config'))
 app = Flask(__name__)
 db = DB(app, config)
@@ -17,7 +16,8 @@ app.config["DEBUG"] = True  # Only include this while you are testing your app
 def homepage():
     return render_template('root.html')
 
-@app.route('/reset', methods=['POST', 'GET']) #Reset the database 
+
+@app.route('/reset', methods=['POST', 'GET'])  # Reset the database
 def reset_db():
     res = db.reset()
     if request.method == 'GET':
@@ -29,6 +29,81 @@ def reset_db():
 @app.route('/studentProfile', methods=['POST', 'GET'])
 def studentProfile():
     return render_template('studentProfile.html')
+
+
+# gets
+
+def getClasses():
+    data = request.get_data()
+    res = db.getClasses(data)
+    return res
+
+
+def getRoster():
+    data = request.get_data()
+    res = db.getRoster(data)
+    return res
+
+
+def getStudentsPresent():
+    data = request.get_data()
+    res = db.getStudentsPresent(data)
+    return res
+
+
+def getStudentDetail():
+    data = request.get_data()
+    res = db.getStudentDetail(data)
+    return res
+
+
+def getClassDetail():
+    data = request.get_data()
+    res = db.getClassDetail(data)
+    return res
+
+
+def getStatistics():
+    data = request.get_data()
+    res = db.getStatistics(data)
+    return res
+
+
+#  posts
+@app.route('/', methods=['POST'])
+def setStudentDetail():
+    data = request.get_data()
+    res = db.setStudentDetail(data)
+    return res
+
+
+# @app.route('/', methods=['POST'])
+def setClassDetail():
+    data = request.get_data()
+    res = db.setClassDetail(data)
+    return res
+
+
+# @app.route('/', methods=['POST'])
+def signin():
+    data = request.get_data()
+    res = db.signin(data)
+    return res
+
+
+# @app.route('/', methods=['POST'])
+def signout():
+    data = request.get_data()
+    res = db.signout(data)
+    return res
+
+
+# @app.route('/', methods=['POST'])
+def updateEnrollment():
+    data = request.get_data()
+    res = db.updateEnrollment(data)
+    return res
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
