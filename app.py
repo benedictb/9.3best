@@ -30,7 +30,6 @@ def reset_db():
 def studentProfile():
     return render_template('studentProfile.html')
 
-
 # gets
 
 def getClasses():
@@ -103,6 +102,10 @@ def updateEnrollment():
     data = request.get_data()
     res = db.updateEnrollment(data)
     return res
+
+@app.route('/attendanceRates', methods=['POST', 'GET'])
+def attendanceRates():
+    return render_template('attendanceRates.html')
 
 
 if __name__ == "__main__":
