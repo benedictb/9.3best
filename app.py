@@ -4,6 +4,8 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from app.db import DB
 import json
 
+from data_gen.generate_data import get_generators
+
 config = yaml.load(open('rollcall.config'))
 app = Flask(__name__)
 db = DB(app, config)
@@ -24,6 +26,17 @@ def reset_db():
         return render_template('reset.html')
     else:
         return res
+
+@app.route('/generate', methods=['GET'])
+def generate_db():
+    db.reset()
+
+    funcs = get_generators()
+    for f in funcs:
+        print f.__name__
+        q = f(db)
+        db.query(q)
+    return render_template('generate.html')
 
 
 @app.route('/studentProfile', methods=['POST', 'GET'])

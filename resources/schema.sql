@@ -15,23 +15,23 @@ DROP TABLE IF EXISTS classes;
 CREATE TABLE classes (
   classID   INT NOT NULL AUTO_INCREMENT,
   className VARCHAR(30) NOT NULL,
-  startDate DATETIME NOT NULL, 
-  endDate   DATETIME NOT NULL,
-  startTime DATETIME NOT NULL,
-  endTIme   DATETIME NOT NULL,
-  sun       bool NOT NULL,
-  mon       bool NOT NULL,
-  tue       bool NOT NULL,
-  wed       bool NOT NULL,
-  thu       bool NOT NULL,
-  fri       bool NOT NULL,
-  sat       bool NOT NULL,
+  startDate DATE NOT NULL,
+  endDate   DATE NOT NULL,
+  startTime TIME NOT NULL,
+  endTime   TIME NOT NULL,
+  sun       bool NOT NULL DEFAULT 0,
+  mon       bool NOT NULL DEFAULT 0,
+  tue       bool NOT NULL DEFAULT 0,
+  wed       bool NOT NULL DEFAULT 0,
+  thu       bool NOT NULL DEFAULT 0,
+  fri       bool NOT NULL DEFAULT 0,
+  sat       bool NOT NULL DEFAULT 0,
   PRIMARY KEY (classID)
 );
 
-DROP TABLE IF EXISTS class_membership;
-CREATE TABLE class_membership (
-  classID   INT NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS enrollment;
+CREATE TABLE enrollment (
+  classID   INT NOT NULL,
   studentID INT NOT NULL,
   firstName   VARCHAR (30) NOT NULL,
   lastName   VARCHAR (30) NOT NULL,
@@ -45,7 +45,9 @@ CREATE TABLE attendance (
   inTime     DATETIME NOT NULL,
   outTime    DATETIME,
   studentID   INT NOT NULL,
-  PRIMARY KEY (classID, studentID)
+  PRIMARY KEY (classID, studentID, inTime)
 );
 
+-- clean up previous table names
 DROP TABLE IF EXISTS tutors;
+DROP TABLE IF EXISTS class_membership
