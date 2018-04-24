@@ -3,16 +3,12 @@
 import random
 from datetime import date, timedelta
 
-import uuid
-
 import collections
 
 from random_words import RandomWords
 
 from app.util import weekList
 
-rw = RandomWords()
-random.seed()
 
 
 def gen_students(db):
@@ -51,7 +47,6 @@ def gen_enrollment(db):
     query = ''
     for student in students:
         c = random.choice(classIDs)
-        print(c)
         query += '''INSERT INTO enrollment (classID, studentID, firstName, lastName) VALUES ({},{},'{}','{}');\n'''.format(
             c['classID'], student['studentID'], student['lastName'], student['firstName'])
 
@@ -81,7 +76,9 @@ def gen_attendance(db):
         for i, c in enumerate(classes):
             if c[dayname]:
                 for student in rosters[c['classID']]:
-                    if random.randint(1, 4) > 1:
+                    n = random.random()
+                    print n
+                    if n > .5:
                         start = ' ' + str(starts[i]) + ':' + str(random.randint(0, 59)) + ':' + str(
                             random.randint(0, 59))
                         stop = ' ' + str(starts[i] + 1) + ':' + str(
@@ -89,10 +86,9 @@ def gen_attendance(db):
                         startDT = d.strftime('%Y-%-m-%d') + start
                         stopDT = d.strftime('%Y-%-m-%d') + stop
 
-                        print startDT
-
-                        query += '''INSERT INTO attendance (classID, inTime, outTime, studentID) VALUES ({}, '{}', '{}', {});\n'''.format(
-                            c['classID'], startDT, stopDT, student['studentID'])
+                        query += '''INSERT INTO attendance (classID, inTime, outTime, studentID, inDate, dayOfWeek) 
+                                    VALUES ({}, '{}', '{}', {}, '{}', '{}');\n'''.format(
+                            c['classID'], startDT, stopDT, student['studentID'], d.strftime('%Y-%-m-%d'), d.weekday())
     return query
 
 

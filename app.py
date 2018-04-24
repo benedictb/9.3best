@@ -43,39 +43,67 @@ def generate_db():
 def studentProfile():
     return render_template('studentProfile.html')
 
-# gets
+# GETs
+
 
 def getClasses():
+    """
+    Retrieves the class information for a given date
+    params: date (format YYYY-MM-DD)
+    """
     data = request.get_data()
     res = db.getClasses(data)
     return res
 
 
 def getRoster():
+    """
+    Retrieves the enrollment for a particular class
+    params: classID, date (format YYYY-MM-DD)
+    """
     data = request.get_data()
     res = db.getRoster(data)
     return res
 
 
 def getStudentsPresent():
+    """
+    Retrieves all students present at a given time
+    params: datetime (format YYYY-MM-DD HH:MM:SS)
+    """
     data = request.get_data()
     res = db.getStudentsPresent(data)
     return res
 
 
 def getStudentDetail():
+    """
+    Retrieves information for a particular student
+    params: studentID
+    """
     data = request.get_data()
     res = db.getStudentDetail(data)
     return res
 
 
 def getClassDetail():
+    """
+    Retrieves information for a particular class
+    params: classID
+    """
     data = request.get_data()
     res = db.getClassDetail(data)
     return res
 
 
 def getStatistics():
+    """
+    Retrieves the attendance statistic for a given timeframe,
+    class and list of days
+    params: startDate (format YYYY-MM-DD), endDate,
+            days ( format list of days requested in first-three-letter format
+            eg: ['mon', 'wed', 'thu'] )
+    """
     data = request.get_data()
     res = db.getStatistics(data)
     return res
@@ -84,6 +112,11 @@ def getStatistics():
 #  posts
 @app.route('/', methods=['POST'])
 def setStudentDetail():
+    """
+    Creates a new student
+    params: (all strings) firstName, lastName, pictureURL, birthday, iceName,
+            icePhone, signOutInfo
+    """
     data = request.get_data()
     res = db.setStudentDetail(data)
     return res
@@ -91,6 +124,13 @@ def setStudentDetail():
 
 # @app.route('/', methods=['POST'])
 def setClassDetail():
+    """
+    Creates a new class
+    params: className,
+            startDate (format YYYY-MM-DD), endDate,
+            startTime (format HH:MM:SS), endTime,
+            sun (1 for True, 0 for False), mon, tue, wed, thu, fri, sat
+    """
     data = request.get_data()
     res = db.setClassDetail(data)
     return res
@@ -98,6 +138,10 @@ def setClassDetail():
 
 # @app.route('/', methods=['POST'])
 def signin():
+    """
+    Signs a student in
+    params: studentID, classID
+    """
     data = request.get_data()
     res = db.signin(data)
     return res
@@ -105,16 +149,36 @@ def signin():
 
 # @app.route('/', methods=['POST'])
 def signout():
+    """
+    Signs a student in
+    params: studentID, classID
+    """
     data = request.get_data()
     res = db.signout(data)
     return res
 
+
+# UPDATEs
+# (not yet implemented)
 
 # @app.route('/', methods=['POST'])
 def updateEnrollment():
     data = request.get_data()
     res = db.updateEnrollment(data)
     return res
+
+def retroactiveSignin(self):
+    data = request.get_data()
+    res = db.updateEnrollment(data)
+    return res
+
+def retroactiveSignout(self):
+    data = request.get_data()
+    res = db.updateEnrollment(data)
+    return res
+
+
+
 
 @app.route('/attendanceRates', methods=['POST', 'GET'])
 def attendanceRates():

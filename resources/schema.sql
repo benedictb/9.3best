@@ -42,10 +42,12 @@ CREATE TABLE enrollment (
 DROP TABLE IF EXISTS attendance;
 CREATE TABLE attendance (
   classID     INT NOT NULL,
-  inTime     DATETIME NOT NULL,
-  outTime    DATETIME,
+  inTime      DATETIME NOT NULL,
+  outTime     DATETIME,
   studentID   INT NOT NULL,
-  PRIMARY KEY (classID, studentID, inTime)
+  inDate      DATE,
+  dayOfWeek   VARCHAR(3),
+  PRIMARY KEY (classID, studentID, inDate)
 );
 
 -- clean up previous table names
