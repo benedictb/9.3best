@@ -95,5 +95,6 @@ def gen_attendance(db):
                             c['classID'], startDT, stopDT, student['studentID'])
     return query
 
+
 def get_generators():
     return [gen_students, gen_classes, gen_enrollment, gen_attendance]

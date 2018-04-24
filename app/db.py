@@ -1,3 +1,4 @@
+import datetime
 from flask import session, jsonify
 from flaskext.mysql import MySQL
 import json
@@ -7,7 +8,7 @@ from app.util import deserialize, getDays
 
 
 class DB(object):
-    """docstring for ClassName"""
+    """Database connection and gateway for the API calls"""
 
     def __init__(self, app, config):
         mysql = MySQL(cursorclass=DictCursor)
@@ -34,7 +35,6 @@ class DB(object):
         else:
             return json.dumps({'error': str(res)})
 
-
     def query(self, q):
         print q
         cur = self.conn.cursor()
@@ -48,33 +48,52 @@ class DB(object):
     def setStudentDetail(self, data):
         d = deserialize(data)
         res = self.query('''INSERT into students (firstName, lastName, pictureURL, birthday, iceName, icePhone, signOutInfo) 
-                          VALUES ({}, {}, {}, {}, {}, {}, {});'''.format(d['firstName',d['lastName'], d['pictureURL'],
+                          VALUES ({}, {}, {}, {}, {}, {}, {});'''.format(d['firstName', d['lastName'], d['pictureURL'],
                                                                            d['birthday'], d['iceName'], d['icePhone'],
                                                                            d['signOutInfo']]))
         new_id = self.query('select LAST_INSERT_ID()')[0][0]
-        return jsonify({'valid': True, 'id': new_id})
+        return jsonify({'valid': 'true', 'id': new_id})
 
     def setClassDetail(self, data):
         d = deserialize(data)
         days = getDays(d['days'])
+
         res = self.query('''INSERT INTO classes (className, startDate, endDate, startTime, endTIme, sun, mon, tue, wed, thu, fri, sat) VALUES 
-                          VALUES classname''')
+                          VALUES ({},'{}','{}', '{}', '{}',{}) '''.format(
+            d['className'], d['startDate'], d['endDate'], d['startTime'], d['endTime'], ','.join(
+                [str(x) for x in days])))
+
+        new_id = self.query('select LAST_INSERT_ID()')[0][0]
+        return jsonify({'valid': 'true', 'id': new_id})
 
     def signin(self, data):
-        pass
-        # INSERT into attendence (classID, studentID, inTime) VALUES
-        # ({}, {}, {})
-
+        d = deserialize(data)
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        res = self.query('''INSERT into attendence (classID, studentID) VALUES ({},{},'{}')'''.format(d['classID'],
+                                                                                                      d['studentID'],
+                                                                                                      now))
+        return jsonify({'valid': 'true'})
 
     def signout(self, data):
-        pass
-            # res = self.query('''(''' UPDATE attendance SET outTime={}
-            #             WHERE classID = {} and studentID = {};\n'''.format(new_id, session['eventDetailsId']))
+        d = deserialize(data)
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        today = now.date()
 
+        res = self.query('''UPDATE attendance SET outTime = '{}' WHERE classID = {} AND studentID = {} AND 
+                              DATE(inTime) = '{}'; '''.format(now, d['classID'], d['studentID'], today))
+
+        return jsonify({'valid': 'true'})
+
+    # UPDATE
 
     def updateEnrollment(self, data):
         pass
 
+    def retroactiveSignin(self):
+        pass
+
+    def retroactiveSignout(self):
+        pass
 
     # GETs
 
@@ -92,6 +111,7 @@ class DB(object):
 
     def getStudentsPresent(self, data):
         pass
+
     # SELECT studentID, firstName, lastName FROM attendence a, students s where a.studentID = a.studentID
     # and a.inTime < currTime and a.outTime is NOT NULL
 
@@ -99,14 +119,16 @@ class DB(object):
         d = deserialize(data)
         res = self.query(
             '''SELECT a.firstName, a.lastName FROM attendance a  '''.format(location, eventID))
-# select roster
+
+    # select roster
     # SELECT firstName, lastName, studentID, inTime, outTime FROM class_membership LEFT JOIN attendance ON studentID
     # WHERE classID = {CLASS_ID} and CAST(inTime AS DATE) = {QUERY_DATE}
 
     def getClasses(self, data):
         d = deserialize(data)
+
         res = self.query(
             '''SELECT classID, className, days '''.format(location, eventID))
         # get the current day of the week
 
-    # SELECT classID, className, startTime, endTime FROM classes WHERE {} = 1
+        # SELECT classID, className, startTime, endTime FROM classes WHERE {} = 1
