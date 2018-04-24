@@ -29,7 +29,7 @@ h4 {
 }
 .container {
     height: 100%;
-    
+
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: 50px auto;
@@ -78,7 +78,7 @@ h4 {
 
 .torso {
     grid-area: torso;
-    
+
     display: grid;
     grid-template-columns: 190px auto;
     grid-template-rows: 100%;
@@ -144,7 +144,7 @@ h4 {
     color: #424242;
 }
 
-.studentPic {
+.tutorPic {
     background-color: #D3D3D3;
     width: 350px;
     float: left;
@@ -152,8 +152,7 @@ h4 {
     height: auto;
 
 }
-.studentPic img{
-
+.tutorPic img{
     width: auto;
     height: auto;
     max-width: 300px;
@@ -164,7 +163,7 @@ h4 {
     display: block;
 }
 
-.studentInfo {
+.tutorInfo {
     text-align: center;
 }
 
@@ -177,14 +176,14 @@ h4 {
     text-align: left;
 }
 
-.enrolledClasses {
+.students {
     width: 300px;
     background-color: #E8E8E8;
     text-align: center;
     padding-bottom: 5px;
 }
 
-.signOutInfo {
+.tutorDays {
     margin-top: 30px;
     width: 300px;
     background-color: #E8E8E8;
@@ -192,7 +191,7 @@ h4 {
     padding-bottom: 5px;
 }
 
-.emergencyInfo {
+.contactInfo {
     overflow: auto;
     margin-top: 30px;
     width: 300px;
@@ -200,7 +199,7 @@ h4 {
     text-align: center;
     padding-bottom: 5px;
 }
-.enrolledClasses h2, .signOutInfo h2, .emergencyInfo h2 {
+.students h2, .tutorDays h2, .contactInfo h2 {
     margin-top: 0px;
     background-color: #ff8170;
 }

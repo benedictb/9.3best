@@ -142,65 +142,115 @@ h4 {
 .main {
     padding: 40px;
     color: #424242;
+    text-align: center;
 }
 
-.studentPic {
+.main h1 {
     background-color: #D3D3D3;
-    width: 350px;
+
+}
+.days {
+    text-align: center;
+    position: relative;
+    height: 100px;
+}
+
+.daysTitle {
+    position: relative;
+    width: 30%;
     float: left;
-    max-height: 500px;
-    height: auto;
-
-}
-.studentPic img{
-
-    width: auto;
-    height: auto;
-    max-width: 300px;
-    max-height: 300px;
-    margin-top: 25px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
 }
 
-.studentInfo {
+.daysTitle h3 {
+    font-size: 18pt;
+}
+.btn-group {
+    margin: 0 auto;
     text-align: center;
+    position: relative;
+    width: 70%;
+    float: left;
 }
 
-.extraInfo {
-    margin-top: -20px;
-    width: 550px;
-    float: right;
-    max-height: 500px;
-    height: auto;
-    text-align: left;
-}
-
-.enrolledClasses {
-    width: 300px;
-    background-color: #E8E8E8;
-    text-align: center;
-    padding-bottom: 5px;
-}
-
-.signOutInfo {
-    margin-top: 30px;
-    width: 300px;
-    background-color: #E8E8E8;
-    text-align: center;
-    padding-bottom: 5px;
-}
-
-.emergencyInfo {
-    overflow: auto;
-    margin-top: 30px;
-    width: 300px;
-    background-color: #E8E8E8;
-    text-align: center;
-    padding-bottom: 5px;
-}
-.enrolledClasses h2, .signOutInfo h2, .emergencyInfo h2 {
-    margin-top: 0px;
+.btn-group button {
     background-color: #ff8170;
+    border: 1px solid black;
+    color: black;
+    padding: 15px 25px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+
+}
+.btn-group button:not(:last-child) {
+    border-right: none; /* Prevent double borders */
+}
+.btn-group button:hover {
+    opacity: 0.8;
+}
+
+.dates {
+    text-align: center;
+    position: relative;
+    height: 70px;
+}
+
+.datesTitle {
+    position: relative;
+    width: 30%;
+    float: left;
+}
+
+.datesTitle h3 {
+    margin-top: 5px;
+    font-size: 18pt;
+}
+
+.datepick2 {
+    position: relative;
+    width: 90%;
+}
+
+.datepick2 h4 {
+    position: realtive;
+    width: 10px;
+    float: left;
+    margin-top: 7px;
+    margin-right: 100px;
+}
+#datepicker2 {
+    position: relative;
+    float: left;
+    width: 150px;
+    font-size: 16pt;
+    background-color: #f8f8f8;
+    color: #424242;
+}
+
+#datepicker3 {
+    position: relative;
+    float: left;
+    width: 150px;
+    font-size: 16pt;
+    background-color: #f8f8f8;
+    color: #424242;
+}
+
+#icon1 {
+    position: relative;
+    float: left;
+    margin-right: 80px;
+}
+
+#icon2 {
+    position: relative;
+    float: left;
+}
+
+.rates h1 {
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 80pt;
+    background-color: #f8f8f8;
 }
