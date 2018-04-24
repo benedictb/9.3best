@@ -1,3 +1,5 @@
+/* landing page */
+
 html, body {
     height: 100%;
 }
@@ -15,6 +17,10 @@ h1 {
 
 p {
     font-size: 16pt;
+}
+
+button:hover {
+    background-color: #9B372F;
 }
 
 .container {
@@ -76,10 +82,6 @@ p {
     cursor: pointer;
 }
 
-.add:hover {
-    opacity: 0.8;
-}
-
 .material-icons.md-34 { font-size: 34pt; }
 
 .torso {
@@ -89,6 +91,8 @@ p {
     grid-template-columns: 190px auto;
     grid-template-rows: 100%;
     grid-template-areas: "nav main";
+    min-height: 0;
+    min-width: 0;
 }
 
 .nav {
@@ -141,12 +145,75 @@ p {
     cursor: pointer;
 }
 
-.nav-button:hover {
-    opacity: 0.8;
-}
-
 .main {
     grid-area: main;
     text-align: center;
     color: #424242;
+    font-size: 16pt;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+/* class roster and who is here */
+
+.table-container {
+  margin: 30px;
+}
+
+.student-table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid #424242;
+}
+
+.student-table>tr>td:first-child, .student-table>tr>th:first-child {
+  text-align: left;
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #dd4f44;
+}
+
+.student-table>tr:nth-child(even) {
+  background-color: white;
+}
+
+.student-table>tr>td {
+  padding: 10px 40px;
+}
+
+.student-table>tr>th {
+  padding: 10px 40px;
+  color: #f8f8f8;
+  background-color: #424242;
+}
+
+input[type=checkbox].sign {
+    display: none;
+}
+
+input[type=checkbox].sign + label:before {
+    width: 12px;
+    height: 12px;
+    border: 1px solid #424242;
+    border-radius: 3px;
+    content: "\00a0";
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    font-family: sans-serif;
+    font-size: 10px;
+    margin: 3px 0.5ex;
+    padding: 0;
+}
+
+input[type=checkbox]:checked.sign + label:before {
+    color: white;
+    background-color: #dd4f44; 
+    content: "\2713";
 }

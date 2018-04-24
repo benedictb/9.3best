@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Roll Call</title>
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <style>
 body {
     font-family: 'Fira Sans';font-size: 16pt;
+    background-color: #F8F8F8;
 }
 button {
     background-color: #dd4f44; 
@@ -19,6 +24,37 @@ button {
     height: 100px;
     width: 150px;
     margin-right: 20px;
+    box-shadow: -3px 3px 10px #888888;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.container {
+    text-align: center;
+    width: 50%;
+    margin-top: 120px;
+
+}
+
+#title {
+    text-align: left;
+    width: 100%;
+    background-color: #424242;
+    margin-top: 0px;
+    padding-left: 10px;
+    font-size: 34pt;
+    height: 50px;
+    line-height: 50px;
+    color: #ffffff;
+}
+
+.choose {
+    font-size: 34pt;
+    color: #424242;
 }
 
 </style>
@@ -27,23 +63,25 @@ button {
 <!-- <i class="material-icons" style="font-size:60px;color:#a5171c;">home</i> -->
 <!-- <button background-color="#a5171c"><i class="material-icons" style="color: white">home</i></button> -->
 
-<br>
-<br>
-<br>
-<br>
+<div class="container" id="title">
+  Roll Call
+</div>
 
-<center>
-<br>
-<font color=#a5171c size="34"> <b> Choose your Task </b></font>
+<div class="container">
+  <div class="jumbotron">
+      <div class="choose">Choose your Task</div>
 <br>
 <br>
 
 <!--lightest: ff8170, medium: dd4f44, dark: a5171c -->
 <!--<button ><i style="font-size:60px; color: white">home</i></button>-->
 <div>
-<button type="button">Fingerprint <br> Scan</button>
-<button type="button">Attendance <br> Sheets</button>
+<button type="button" onclick="window.location.href='ready.html'">Fingerprint <br> Scan</button>
+<button type="button" onclick="window.location.href='landing.html'">Attendance <br> Sheets</button>
 </div>
+</div>
+</div>
+
 </center>
 
 </body>
