@@ -1,13 +1,18 @@
+import datetime
 from flask import session, jsonify
 from flaskext.mysql import MySQL
 import json
 from pymysql.cursors import DictCursor
 
-from app.util import deserialize, getDays
+from app.util import deserialize, weekList, formatDays
+
+
+# TODO fix getStudentsPresent, getroster, app.util.getdays, might need INT casts but prob not
+# also - put a restriction on signing into classes that don't occur on the day of the week that they are scheduled
 
 
 class DB(object):
-    """docstring for ClassName"""
+    """Database connection and gateway for the API calls"""
 
     def __init__(self, app, config):
         mysql = MySQL(cursorclass=DictCursor)
@@ -34,9 +39,7 @@ class DB(object):
         else:
             return json.dumps({'error': str(res)})
 
-
     def query(self, q):
-        print q
         cur = self.conn.cursor()
         cur.execute(q)
         res = cur.fetchall()
@@ -48,65 +51,170 @@ class DB(object):
     def setStudentDetail(self, data):
         d = deserialize(data)
         res = self.query('''INSERT into students (firstName, lastName, pictureURL, birthday, iceName, icePhone, signOutInfo) 
-                          VALUES ({}, {}, {}, {}, {}, {}, {});'''.format(d['firstName',d['lastName'], d['pictureURL'],
+                          VALUES ({}, {}, {}, {}, {}, {}, {});'''.format(d['firstName', d['lastName'], d['pictureURL'],
                                                                            d['birthday'], d['iceName'], d['icePhone'],
                                                                            d['signOutInfo']]))
         new_id = self.query('select LAST_INSERT_ID()')[0][0]
-        return jsonify({'valid': True, 'id': new_id})
+        return jsonify({'valid': 'true', 'id': new_id})
 
     def setClassDetail(self, data):
         d = deserialize(data)
-        days = getDays(d['days'])
-        res = self.query('''INSERT INTO classes (className, startDate, endDate, startTime, endTIme, sun, mon, tue, wed, thu, fri, sat) VALUES 
-                          VALUES classname''')
+        days = formatDays(d['days'])
+
+        res = self.query('''INSERT INTO classes (className, startDate, endDate, startTime, endTime, sun, mon, tue, wed, thu, fri, sat) VALUES 
+                          VALUES ({},'{}','{}', '{}', '{}',{}) '''.format(
+            d['className'], d['startDate'], d['endDate'], d['startTime'], d['endTime'], ','.join(
+                [str(x) for x in days])))
+
+        new_id = self.query('select LAST_INSERT_ID()')[0][0]
+        return jsonify({'valid': 'true', 'id': new_id})
 
     def signin(self, data):
-        pass
-        # INSERT into attendence (classID, studentID, inTime) VALUES
-        # ({}, {}, {})
+        d = deserialize(data)
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        today = datetime.datetime.now().strftime('%Y-%m-%d')
 
+        res = self.query(
+            '''INSERT into attendance (classID, studentID, inTime, inDate ) VALUES ({},{},'{}')'''.format(
+                d['classID'], d['studentID'], now, today
+            )
+        )
+        return jsonify({'valid': 'true'})
 
     def signout(self, data):
-        pass
-            # res = self.query('''(''' UPDATE attendance SET outTime={}
-            #             WHERE classID = {} and studentID = {};\n'''.format(new_id, session['eventDetailsId']))
+        d = deserialize(data)
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        today = now.date()
 
+        res = self.query('''UPDATE attendance SET outTime = '{}' WHERE classID = {} AND studentID = {} AND 
+                              DATE(inTime) = '{}'; '''.format(now, d['classID'], d['studentID'], today))
+
+        return jsonify({'valid': 'true'})
+
+    # GETs
+
+    def getClassDetail(self, data):
+        d = deserialize(data)
+        res = self.query(
+            '''SELECT * FROM classes WHERE classID = {}'''.format(
+                d['classID']
+            )
+        )
+
+        return jsonify(res)
+
+    def getStudentDetail(self, data):
+        d = deserialize(data)
+        res = self.query(
+            '''SELECT * FROM students WHERE studentID = {}'''.format(
+                d['studentID']
+            )
+        )
+
+        return jsonify(res)  # SELECT * from students where studentID = {}
+
+    # Examine
+    def getStudentsPresent(self, data):
+        d = deserialize(data)
+
+        # Only want people that have signed in this day in case there's some discrepancies
+        fdate = datetime.datetime.strptime(d['datetime'], '%Y-%m-%d %H:%M:%S')
+        sdate = fdate.strftime('%Y-%m-%d')
+
+        res = self.query(
+            '''SELECT studentID, firstName, lastName FROM attendence a, students s where a.studentID = s.studentID 
+            and a.inDate = '{}' AND (a.outTime IS NOT NULL OR a.outTime > '{}' '''.format(
+                sdate, d['date']
+            )
+        )
+
+        return jsonify(res)
+
+    def getClasses(self, data):
+        d = deserialize(data)
+
+        # Please enter as "YYYY-MM-DD"
+        qdate = d['date']
+        sdate = datetime.date.strftime(d['date'], '%Y-%M-%D')
+        dayname = weekList()[sdate.weekday()]
+
+        res = self.query(
+            '''SELECT * FROM classes WHERE {} = 1 AND startDate <= '{}' and endDate >= '{}'; '''.format(
+                dayname, qdate, qdate
+            )
+        )
+
+        return jsonify(res)
+
+    def getRoster(self, data):
+        d = deserialize(data)
+
+        res = self.query(
+            '''SELECT * FROM enrollment e LEFT OUTER JOIN attendance a ON (e.studentID = a.studentID) and e.classID = {}
+            AND inDate = '{}';'''.format(
+                d['classID'], d['date']
+            )
+        )
+
+        return jsonify(res)
+
+    #
+
+
+
+    # This one's slightly more complicated
+    def getStatistics(self, data):
+        d = deserialize(data)
+
+        # possible addition --- don't count days that no one signed in for at all - no class that day
+        # Get no of days that class was in attendance
+        dayNames = weekList()
+
+        startDate = datetime.datetime.strptime(d['startDate'], '%Y-%m-%d')
+        endDate = datetime.datetime.strptime(d['endDate'], '%Y-%m-%d')
+
+        day_counts = dict(zip(dayNames, [0] * 7))
+
+        td = datetime.timedelta(days=1)
+        while startDate <= endDate:
+            day_counts[dayNames[startDate.weekday()]] += 1
+            startDate += td
+
+        # Get num of enrolled students, need debugging for this
+        roster_length = self.query(
+            '''SELECT COUNT(*) FROM enrollment WHERE classID = {}'''.format(
+                d['classID']
+            )
+        )
+
+        # Get total num of days this class was in session between the start and end date inclusive
+        total_days = 0
+        for day in d['days']:
+            total_days += day_counts[day]
+
+        # Get total number of students that could have possible been there
+        possible = total_days * roster_length
+
+        # Get total number of students that were actually there
+        actual = self.query(
+            '''SELECT COUNT(*) FROM attendance WHERE dayOfWeek IN ({}) AND inDate >= '{}' AND inDate <= '{}' '''.format(
+                formatDays(d['days']), d['startDate'], d['endDate']
+            )
+        )
+
+        ratio = float(actual) / float(possible)
+
+        return jsonify({'value': ratio})
+
+
+
+    # UPDATE
 
     def updateEnrollment(self, data):
         pass
 
-
-    # GETs
-
-    def getStatistics(self, data):
-        d = deserialize(data)
-        # length = len("SELECT COUNT(*) from class_membership where classID = {CLASS_ID}
-
-    def getClassDetail(self, data):
+    def retroactiveSignin(self):
         pass
-        # SELECT * from classes where classID = {}
 
-    def getStudentDetail(self, data):
+    def retroactiveSignout(self):
         pass
-        # SELECT * from students where studentID = {}
-
-    def getStudentsPresent(self, data):
-        pass
-    # SELECT studentID, firstName, lastName FROM attendence a, students s where a.studentID = a.studentID
-    # and a.inTime < currTime and a.outTime is NOT NULL
-
-    def getRoster(self, data):
-        d = deserialize(data)
-        res = self.query(
-            '''SELECT a.firstName, a.lastName FROM attendance a  '''.format(location, eventID))
-# select roster
-    # SELECT firstName, lastName, studentID, inTime, outTime FROM class_membership LEFT JOIN attendance ON studentID
-    # WHERE classID = {CLASS_ID} and CAST(inTime AS DATE) = {QUERY_DATE}
-
-    def getClasses(self, data):
-        d = deserialize(data)
-        res = self.query(
-            '''SELECT classID, className, days '''.format(location, eventID))
-        # get the current day of the week
-
-    # SELECT classID, className, startTime, endTime FROM classes WHERE {} = 1
