@@ -49,7 +49,7 @@ class DB(object):
     # POSTs
 
     def setStudentDetail(self, data):
-        d = deserialize(data)
+        d = data
         res = self.query('''INSERT into students (firstName, lastName, pictureURL, birthday, iceName, icePhone, signOutInfo) 
                           VALUES ({}, {}, {}, {}, {}, {}, {});'''.format(d['firstName', d['lastName'], d['pictureURL'],
                                                                            d['birthday'], d['iceName'], d['icePhone'],
@@ -58,7 +58,7 @@ class DB(object):
         return jsonify({'valid': 'true', 'id': new_id})
 
     def setClassDetail(self, data):
-        d = deserialize(data)
+        d = data
         days = formatDays(d['days'])
 
         res = self.query('''INSERT INTO classes (className, startDate, endDate, startTime, endTime, sun, mon, tue, wed, thu, fri, sat) VALUES 
@@ -70,7 +70,7 @@ class DB(object):
         return jsonify({'valid': 'true', 'id': new_id})
 
     def signin(self, data):
-        d = deserialize(data)
+        d = data
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         today = datetime.datetime.now().strftime('%Y-%m-%d')
 
@@ -82,7 +82,7 @@ class DB(object):
         return jsonify({'valid': 'true'})
 
     def signout(self, data):
-        d = deserialize(data)
+        d = data
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         today = now.date()
 
@@ -93,29 +93,37 @@ class DB(object):
 
     # GETs
 
+    # WORKS
     def getClassDetail(self, data):
-        d = deserialize(data)
+        d = data
         res = self.query(
             '''SELECT * FROM classes WHERE classID = {}'''.format(
                 d['classID']
             )
         )
 
+        res = res[0]
+        res['startTime'] = str(res['startTime'])
+        res['endTime'] = str(res['endTime'])
+
         return jsonify(res)
 
+    # WORKS
     def getStudentDetail(self, data):
-        d = deserialize(data)
+        d = data
         res = self.query(
             '''SELECT * FROM students WHERE studentID = {}'''.format(
                 d['studentID']
             )
         )
 
+        res = res[0]
+
         return jsonify(res)  # SELECT * from students where studentID = {}
 
     # Examine
     def getStudentsPresent(self, data):
-        d = deserialize(data)
+        d = data
 
         # Only want people that have signed in this day in case there's some discrepancies
         fdate = datetime.datetime.strptime(d['datetime'], '%Y-%m-%d %H:%M:%S')
@@ -131,7 +139,11 @@ class DB(object):
         return jsonify(res)
 
     def getClasses(self, data):
-        d = deserialize(data)
+        d = data
+        print '\n\n'
+        # print(d)
+        print(data)
+        print('\n')
 
         # Please enter as "YYYY-MM-DD"
         qdate = d['date']
@@ -147,7 +159,7 @@ class DB(object):
         return jsonify(res)
 
     def getRoster(self, data):
-        d = deserialize(data)
+        d = data
 
         res = self.query(
             '''SELECT * FROM enrollment e LEFT OUTER JOIN attendance a ON (e.studentID = a.studentID) and e.classID = {}
@@ -164,7 +176,7 @@ class DB(object):
 
     # This one's slightly more complicated
     def getStatistics(self, data):
-        d = deserialize(data)
+        d = data
 
         # possible addition --- don't count days that no one signed in for at all - no class that day
         # Get no of days that class was in attendance
