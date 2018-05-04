@@ -2,7 +2,9 @@ const url = 'http://0.0.0.0:5000/';
 
 function start() {
   setupDatepickerAndClasses();
-  setupWhosHere();
+  setupPeopleTable('whois-button', 'whoshere', "Who's here?");
+  setupPeopleTable('directory-button', 'directory', 'All Students');
+  setupSearchBar();
 };
 
 start();
@@ -13,6 +15,7 @@ function getDateString(id) {
 }
 
 function createButton(name, key, className, text, clickFcn) {
+  /* creates a button with the specified properties */
   const btn = document.createElement('button');
   btn.className = className;
   btn.dataset.key = key;
@@ -23,15 +26,12 @@ function createButton(name, key, className, text, clickFcn) {
 }
 
 function createNode(kind, id, className, inner) {
+  /* creates an element with the specified properties */
   const node = document.createElement(kind);
   if (id) node.id = id;
   if (className) node.className = className;
   if (inner) node.innerHTML = inner;
   return node;
-}
-
-function createDiv(id, className) {
-  return createNode('div', id, className, '');
 }
 
 function setupDatepickerAndClasses() {
@@ -52,23 +52,45 @@ function setupClassButtons() {
       buttonDiv.innerHTML = '';
 
       for (let d of data) {
-        buttonDiv.appendChild(createButton(d.name, d.key, 'class-button nav-button', d.name, setupRoster));
+        buttonDiv.appendChild(createButton(d.name, d.key,
+          'class-button nav-button', d.name, setupRoster));
       }
     }
   );
 }
 
-function setupWhosHere() {
-  /* when the user clicks the who's here button, create the who's here page */
-  const whoshere = document.getElementsByClassName('whois-button')[0];
+function setupSearchBar() {
+  $.get(url + 'directory',
+    function(data) {
+      let tags = [];
+      for (var d of data) {
+        let name = d.firstName + ' ' + d.lastName;
+        tags.push({label: name, value: d.key});
+      }
 
-  whoshere.onclick = function() {
-    $.get(url + 'whoshere',
+      $('.search').autocomplete({
+        source: tags,
+        select: function (e, ui) {
+          $('.search').val(ui.item.label);
+          setupStudentPage(ui.item.value);
+          return false;
+        }
+      });
+    });
+}
+
+function setupPeopleTable(className, path, header) {
+  /* when the user clicks the who's here or all student buttons,
+   * then create the appropriate page */
+  const btn = document.getElementsByClassName(className)[0];
+
+  btn.onclick = function() {
+    $.get(url + path,
       function(data) {
         const main = document.getElementById('main');
         const cont = document.createElement('div');
         const h1 = document.createElement('h1');
-        h1.innerHTML = "Who's here?";
+        h1.innerHTML = header;
         cont.className = 'table-container';
         main.innerHTML = '';
         main.appendChild(cont);
@@ -96,8 +118,13 @@ function setupRoster() {
       main.innerHTML = '';
       main.appendChild(cont);
       cont.appendChild(h1);
-      cont.appendChild(createButton(className, classKey, 'go-to-rate', 'Attendance Rate Info', setupAttendanceRatePage));
-      cont.appendChild(createRosterTable(data));
+      cont.appendChild(createButton(className, classKey, 'go-to-rate',
+        'Attendance Rate Info', setupAttendanceRatePage));
+      if (className === 'Tutoring') {
+        cont.appendChild(createTutorRosterTable(data));
+      } else {
+        cont.appendChild(createRosterTable(data));
+      }
     }
   );
 }
@@ -126,7 +153,8 @@ function setupAttendanceRatePage() {
   cont.appendChild(h1);
   cont.appendChild(form);
   cont.appendChild(stat);
-  cont.appendChild(createButton(name, key, 'back-to-roster', 'Back to Roster', setupRoster));
+  cont.appendChild(createButton(name, key, 'back-to-roster',
+    'Back to Roster', setupRoster));
   
   $('#date-start-picker').datepicker().datepicker("setDate", new Date());
   $('#date-end-picker').datepicker().datepicker("setDate", new Date());
@@ -176,7 +204,8 @@ function createAttendanceRateForm(name, key) {
   form.appendChild(datesTitle);
   form.appendChild(datesPickers);
 
-  form.appendChild(createButton(name, key, 'calc-button', 'Calculate', getAttendanceStatistic));
+  form.appendChild(createButton(name, key, 'calc-button',
+    'Calculate Attendance Rate', getAttendanceStatistic));
 
   return form;
 }
@@ -235,6 +264,13 @@ function createRosterTable(data) {
   table.appendChild(headerRow);
 
   for (let d of data) {
+    table.appendChild(createStudentRow(d, false));
+  }
+
+  return table;
+}
+
+function createStudentRow(d, forTutorTable) {
     let row = document.createElement('tr');
     
     let tdName = document.createElement('td');
@@ -246,15 +282,65 @@ function createRosterTable(data) {
     let tdOut = document.createElement('td');
     tdOut.appendChild(createRosterCheckbox(d.out, "out", d.key));
 
+    if (forTutorTable)
+      row.appendChild(document.createElement('tr'));
+
     row.appendChild(tdName);
     row.appendChild(tdIn);
     row.appendChild(tdOut);
 
+    return row;
+}
+
+function createTutorRosterTable(data) {
+  /* create table for class page */
+  const table = document.createElement('table');
+  table.className = 'tutor-table';
+  const headRow = document.createElement('tr');
+  headRow.innerHTML = '<th>+</th><th>Name</th><th>Sign In</th><th>Sign Out</th>'
+  table.appendChild(headRow);
+
+  for (let d of data) {
+    let row = document.createElement('tr');
+
+    let tdExpand = document.createElement('td');
+    tdExpand.className = 'expand-cell';
+    tdExpand.appendChild(createButton('', '', 'expand-button', '+', function(){
+      this.innerHTML = this.innerHTML === '+' ? '-' : '+';
+      const color = $(this).parent().parent().css('background-color');
+      $(this).parent().parent().nextUntil('tr.tutor-row')
+        .css('display', function() {
+          return this.style.display === 'table-row' ? 'none' : 'table-row';
+        })
+        .css('background-color', color);
+    }));
+    
+    let tdName = document.createElement('td');
+    tdName.appendChild(createTutorLink(d));
+    
+    let tdIn = document.createElement('td');
+    tdIn.appendChild(createRosterCheckbox(d.in, "in", d.key));
+    
+    let tdOut = document.createElement('td');
+
+    row.appendChild(tdExpand);
+    row.appendChild(tdName);
+    row.appendChild(tdIn);
+    row.appendChild(tdOut);
+    row.className = 'tutor-row';
+
     table.appendChild(row);
+
+    for (let s of d.students) {
+      let r = createStudentRow(s, true);
+      r.className = 'student-row';
+      table.appendChild(r);
+    }
   }
 
   return table;
 }
+
 
 function createWhosHereTable(data) {
   /* create table for who's here page */
@@ -280,12 +366,27 @@ function createWhosHereTable(data) {
 function createStudentLink(data) {
   /* create link to student profile */
   const link = document.createElement('a');
-  link.innerHTML = data.name;
+  link.innerHTML = data.firstName + ' ' + data.lastName;
   link.className = 'link';
   link.dataset.key = data.key;
-  link.onclick = setupStudentPage;
+  link.onclick = function() {
+    setupStudentPage(data.key);
+  };
   return link;
 }
+
+function createTutorLink(data) {
+  /* create link to tutor profile */
+  const link = document.createElement('a');
+  link.innerHTML = data.firstName + ' ' + data.lastName;
+  link.className = 'link';
+  link.dataset.key = data.key;
+  link.onclick = function() {
+    setupTutorPage(data.key);
+  };
+  return link;
+}
+
 
 function createRosterCheckbox(checked, inOrOut, key) {
   /* create sign in and sign out checkboxes */
@@ -316,83 +417,122 @@ function createRosterCheckbox(checked, inOrOut, key) {
 
 function signStudentIn() {
   /* use API to update student sign in */
-  console.log('sign in - ' + this.getAttribute('data-key') + ' - ' + this.checked);
+  console.log('sign in ' + this.getAttribute('data-key') + ' ' + this.checked);
 }
 
 function signStudentOut() {
   /* use API to update student sign out */
-  console.log('sign out - ' + this.getAttribute('data-key') + ' - ' + this.checked);
+  console.log('sign out ' + this.getAttribute('data-key') + ' ' + this.checked);
 }
 
-function setupStudentPage() {
+function setupStudentPage(key) {
   /* set up student profile page */
-  const key = this.getAttribute('data-key');
   $.get(url + 'student',
     {student: key},
     function(data) {
       const main = document.getElementById('main');
       main.innerHTML = '';
-      main.appendChild(createStudentProfile(data));
+      main.appendChild(createProfile(data, true));
     }
   );
 }
 
-function createStudentProfile(data) {
-  /* create divs for student profile */
-  const cont = createDiv('', 'student-container');
+function setupTutorPage(key) {
+  /* set up tutor profile page */
+  $.get(url + 'tutor',
+    {tutor: key},
+    function(data) {
+      const main = document.getElementById('main');
+      main.innerHTML = '';
+      main.appendChild(createProfile(data, false));
+    }
+  );
+}
 
-  cont.appendChild(createBasicInfo(data)); 
-  cont.appendChild(createOtherInfo(data));
+function createProfile(data, isStudent) {
+  /* create divs for student or tutor profile */
+  const cont = createNode('div', '', 'profile-container', '');
+
+  cont.appendChild(createBasicInfo(data, isStudent)); 
+  cont.appendChild(createOtherInfo(data, isStudent));
 
   return cont;
 }
 
-function createBasicInfo(data) {
+function createBasicInfo(data, isStudent) {
   /* create image, name, and date of birth */
-  console.log(data);
 
-  const basic = createDiv('', 'basic-info');
-  const nameAge = createDiv('', 'name-age');
+  const basic = createNode('div', '', 'basic-info', '');
+  const nameAge = createNode('div', '', 'name-age', '');
+  
+  if (data.firstName === 'Tanya')
+    basic.innerHTML = '<img src=' + 'tanya.jpg' + '>';
+  else if (data.firstName === 'Doug')
+    basic.innerHTML = '<img src=' + 'doug.jpg' + '>';
+  else
+    basic.innerHTML = '<img src=' + 'kelly.jpeg' + '>';
 
-  basic.innerHTML = '<img src=' + 'kelly.jpeg' + '>';
-
-  const nameHead = createNode('h1', '', '', data.name);
-  const dob = createNode('p', '', '', 'Date of Birth: ' + data.dob);
+  const nameHead = createNode('h1', '', '',
+    data.firstName + ' ' + data.lastName);
   nameAge.appendChild(nameHead);
-  nameAge.appendChild(dob);
+
+  if (isStudent) {
+    const dob = createNode('p', '', '', 'Date of Birth: ' + data.dob);
+    nameAge.appendChild(dob);
+  }
 
   basic.appendChild(nameAge);
 
   return basic;
 }
 
-function createOtherInfo(data) {
-  /* create enrolled classes, sign out info, and emergency info */
-  const other = createDiv('', 'other-info');
+function createOtherInfo(data, isStudent) {
+  /* create enrolled classes, sign out info, and emergency info for students
+   * create students, tutoring days, and contact information for tutors */
+  const other = createNode('div', '', 'other-info', '');
   
-  const classes = createDiv('enrolled-classes', 'student-other-card');
-  const signOut = createDiv('sign-out-rules', 'student-other-card');
-  const emergency = createDiv('emergency-info', 'student-other-card');
+  const first = createNode('div', '', 'profile-other-card', '');
+  const second = createNode('div', '', 'profile-other-card', '');
+  const third = createNode('div', '', 'profile-other-card', '');
 
-  const classesHead = createNode('div', '', 'student-other-header', 'Enrolled Classes');
-  const classesInfo = createNode('div', '', 'student-other-info', data.classes.join('<br>'));
-  classes.appendChild(classesHead);
-  classes.appendChild(classesInfo);
+  const firstHead = createNode('div', '', 'profile-other-header',
+    isStudent ? 'Enrolled Classes' : 'Tutor Days');
+  const firstInfo = createNode('div', '', 'profile-other-info',
+    isStudent ? data.classes.join('<br>') : data.days.join('<br>'));
+  first.appendChild(firstHead);
+  first.appendChild(firstInfo);
 
-  const signoutHead = createNode('div', '', 'student-other-header', 'Sign Out Information');
-  const signoutInfo = createNode('div', '', 'student-other-info', data.signout.join('<br>'));
-  signOut.appendChild(signoutHead);
-  signOut.appendChild(signoutInfo);
+  const secondHead = createNode('div', '', 'profile-other-header',
+    isStudent ? 'Sign Out Information' : 'Students');
+  const secondInfo = createNode('div', '', 'profile-other-info', '');
+  if (isStudent) {
+    secondInfo.innerHTML = data.signout.join('<br>');
+  } else {
+    for (let s of data.students) {
+      secondInfo.appendChild(createStudentLink(s));
+      secondInfo.appendChild(createNode('br', '', '', ''));
+    }
+  }
+  second.appendChild(secondHead);
+  second.appendChild(secondInfo);
   
-  const emergencyHead = createNode('div', '', 'student-other-header', 'Emergency Contacts');
-  const info = data.emergency.map((d) => d.name + ': ' +  d.number);
-  const emergencyInfo = createNode('div', '', 'student-other-info', info.join('<br>'));
-  emergency.appendChild(emergencyHead);
-  emergency.appendChild(emergencyInfo);
+  const thirdHead = createNode('div', '', 'profile-other-header',
+    isStudent ? 'Emergency Contacts' : 'Contact');
 
-  other.appendChild(emergency);
-  other.appendChild(signOut);
-  other.appendChild(classes);
+  let info = [];
+  if (isStudent) {
+    info = data.emergency.map((d) => d.name + ': ' +  d.number);
+  } else {
+    info = ['Email: ' + data.email, 'Phone: ' + data.phone];
+  }
+  const thirdInfo = createNode('div', '',
+    'profile-other-info', info.join('<br>'));
+  third.appendChild(thirdHead);
+  third.appendChild(thirdInfo);
+
+  other.appendChild(third);
+  other.appendChild(second);
+  other.appendChild(first);
 
   return other;
 }
