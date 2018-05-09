@@ -45,15 +45,18 @@ function setupDatepickerAndClasses() {
 
 function setupClassButtons() {
   /* use the api to get the classes for the day and create the buttons */
+  const date = getDateString('datepicker');
   $.get(url + 'classes',
-    {date: getDateString('datepicker')},
+    {date: date},
     function(data) {
       const buttonDiv = document.getElementById('classes');
       buttonDiv.innerHTML = '';
 
       for (let d of data) {
-        buttonDiv.appendChild(createButton(d.name, d.key,
-          'class-button nav-button', d.name, setupRoster));
+        const btn = createButton(d.name, d.key,
+          'class-button nav-button', d.name, setupRoster);
+        btn.dataset.date = date;
+        buttonDiv.appendChild(btn);
       }
     }
   );
@@ -103,7 +106,8 @@ function setupPeopleTable(className, path, header) {
 
 function setupRoster() {
   /* when a class button is clicked, setup the class roster */
-  const date = getDateString('datepicker');
+  const date = this.getAttribute("data-date");
+  const dateSplit = date.split('-');
   const classKey = this.getAttribute("data-key");
   const className = this.getAttribute("data-name");
   // use the api to get the class info for this day
@@ -113,13 +117,21 @@ function setupRoster() {
       const main = document.getElementById('main');
       const cont = document.createElement('div');
       const h1 = document.createElement('h1');
-      h1.innerHTML = className;
-      cont.className = 'table-container';
+      const h3 = document.createElement('h3');
+      
       main.innerHTML = '';
+      cont.className = 'table-container';
+      h1.innerHTML = className;
+      h3.innerHTML = dateSplit[1] + '/' + dateSplit[2] + '/' + dateSplit[0];
+
       main.appendChild(cont);
       cont.appendChild(h1);
-      cont.appendChild(createButton(className, classKey, 'go-to-rate',
-        'Attendance Rate Info', setupAttendanceRatePage));
+      const btn = createButton(className, classKey, 'go-to-rate',
+        'Attendance Rate Info', setupAttendanceRatePage);
+      btn.dataset.date = date;
+      cont.appendChild(btn);
+      cont.appendChild(h3);
+
       if (className === 'Tutoring') {
         cont.appendChild(createTutorRosterTable(data));
       } else {
@@ -133,31 +145,36 @@ function setupAttendanceRatePage() {
   /* set up page to allow user to calculate attendance statistics */
   const name = this.getAttribute('data-name');
   const key = this.getAttribute('data-key');
+  const date = this.getAttribute('data-date');
   const main = document.getElementById('main');
   const cont = document.createElement('div');
   const form = createAttendanceRateForm(name, key);
-  
+
   main.innerHTML = '';
   cont.className = 'rate-container';
-  
+
   main.appendChild(cont);
-  
+
   const h1 = document.createElement('h1');
   h1.id = 'rate-header';
   h1.innerHTML = name + ' Attendance Rate';
-    
+
   const stat = document.createElement('h1');
   stat.id = 'stat';
   stat.innerHTML = '';
-  
+
   cont.appendChild(h1);
   cont.appendChild(form);
   cont.appendChild(stat);
-  cont.appendChild(createButton(name, key, 'back-to-roster',
-    'Back to Roster', setupRoster));
+  const btn = createButton(name, key, 'back-to-roster',
+    'Back to Roster', setupRoster);
+  btn.dataset.date = date;
+  cont.appendChild(btn);
   
-  $('#date-start-picker').datepicker().datepicker("setDate", new Date());
-  $('#date-end-picker').datepicker().datepicker("setDate", new Date());
+  $('#date-start-picker').datepicker()
+    .datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", date));
+  $('#date-end-picker').datepicker()
+    .datepicker("setDate", $.datepicker.parseDate("yy-mm-dd", date));
 }
 
 
@@ -165,7 +182,7 @@ function createAttendanceRateForm(name, key) {
   /* create day of week and date range options for attendance stats */
   const form = document.createElement('div');
   form.className = 'rate-form';
-  
+
   const daysTitle = document.createElement('div');
   daysTitle.className = 'days-title';
   daysTitle.innerHTML = 'Select Days of the Week:';
@@ -188,7 +205,7 @@ function createAttendanceRateForm(name, key) {
 
   form.appendChild(daysTitle);
   form.appendChild(daysGroup);
-  
+
   const datesTitle = document.createElement('div');
   datesTitle.className = 'dates-title';
   datesTitle.innerHTML = 'Choose Date Range:';
@@ -271,25 +288,26 @@ function createRosterTable(data) {
 }
 
 function createStudentRow(d, forTutorTable) {
-    let row = document.createElement('tr');
-    
-    let tdName = document.createElement('td');
-    tdName.appendChild(createStudentLink(d));
-    
-    let tdIn = document.createElement('td');
-    tdIn.appendChild(createRosterCheckbox(d.in, "in", d.key));
+  /* create table row for a student */
+  let row = document.createElement('tr');
 
-    let tdOut = document.createElement('td');
-    tdOut.appendChild(createRosterCheckbox(d.out, "out", d.key));
+  let tdName = document.createElement('td');
+  tdName.appendChild(createStudentLink(d));
 
-    if (forTutorTable)
-      row.appendChild(document.createElement('tr'));
+  let tdIn = document.createElement('td');
+  tdIn.appendChild(createRosterCheckbox(d.in, "in", d.key));
 
-    row.appendChild(tdName);
-    row.appendChild(tdIn);
-    row.appendChild(tdOut);
+  let tdOut = document.createElement('td');
+  tdOut.appendChild(createRosterCheckbox(d.out, "out", d.key));
 
-    return row;
+  if (forTutorTable)
+    row.appendChild(document.createElement('tr'));
+
+  row.appendChild(tdName);
+  row.appendChild(tdIn);
+  row.appendChild(tdOut);
+
+  return row;
 }
 
 function createTutorRosterTable(data) {
@@ -297,7 +315,14 @@ function createTutorRosterTable(data) {
   const table = document.createElement('table');
   table.className = 'tutor-table';
   const headRow = document.createElement('tr');
-  headRow.innerHTML = '<th>+</th><th>Name</th><th>Sign In</th><th>Sign Out</th>'
+  headRow.innerHTML = '<th></th><th>Name</th><th>Sign In</th><th>Sign Out</th>'
+  headRow.firstChild.appendChild(createButton('', '', 'expand-all', '+', function() {
+      this.innerHTML = this.innerHTML === '+' ? '-' : '+';
+      const btsn = document.getElementsByClassName('expand-button');
+      for (let b of btsn) {
+        b.click();
+      }
+    }));
   table.appendChild(headRow);
 
   for (let d of data) {
@@ -305,7 +330,7 @@ function createTutorRosterTable(data) {
 
     let tdExpand = document.createElement('td');
     tdExpand.className = 'expand-cell';
-    tdExpand.appendChild(createButton('', '', 'expand-button', '+', function(){
+    let expandBtn = createButton('', '', 'expand-button', '+', function(){
       this.innerHTML = this.innerHTML === '+' ? '-' : '+';
       const color = $(this).parent().parent().css('background-color');
       $(this).parent().parent().nextUntil('tr.tutor-row')
@@ -313,14 +338,15 @@ function createTutorRosterTable(data) {
           return this.style.display === 'table-row' ? 'none' : 'table-row';
         })
         .css('background-color', color);
-    }));
-    
+    });
+    tdExpand.appendChild(expandBtn);
+
     let tdName = document.createElement('td');
     tdName.appendChild(createTutorLink(d));
-    
+
     let tdIn = document.createElement('td');
     tdIn.appendChild(createRosterCheckbox(d.in, "in", d.key));
-    
+
     let tdOut = document.createElement('td');
 
     row.appendChild(tdExpand);
@@ -352,10 +378,10 @@ function createWhosHereTable(data) {
 
   for (let d of data) {
     let row = document.createElement('tr');
-    
+
     let tdName = document.createElement('td');
     tdName.appendChild(createStudentLink(d));
-    
+
     row.appendChild(tdName);
     table.appendChild(row);
   }
@@ -400,7 +426,7 @@ function createRosterCheckbox(checked, inOrOut, key) {
   check.className = "sign";
   check.id = checkId;
   check.dataset.key = key;
-  
+
   if (inOrOut === 'in') {
     check.onclick = signStudentIn;
   } else {
@@ -408,7 +434,7 @@ function createRosterCheckbox(checked, inOrOut, key) {
   }
 
   label.htmlFor = checkId;
-  
+
   cont.appendChild(check);
   cont.appendChild(label);
 
@@ -464,13 +490,13 @@ function createBasicInfo(data, isStudent) {
 
   const basic = createNode('div', '', 'basic-info', '');
   const nameAge = createNode('div', '', 'name-age', '');
-  
+
   if (data.firstName === 'Tanya')
-    basic.innerHTML = '<img src=' + 'tanya.jpg' + '>';
+    basic.innerHTML = '<img src=' + 'images/tanya.jpg' + '>';
   else if (data.firstName === 'Doug')
-    basic.innerHTML = '<img src=' + 'doug.jpg' + '>';
+    basic.innerHTML = '<img src=' + 'images/doug.jpg' + '>';
   else
-    basic.innerHTML = '<img src=' + 'kelly.jpeg' + '>';
+    basic.innerHTML = '<img src=' + 'images/kelly.jpeg' + '>';
 
   const nameHead = createNode('h1', '', '',
     data.firstName + ' ' + data.lastName);
@@ -490,7 +516,7 @@ function createOtherInfo(data, isStudent) {
   /* create enrolled classes, sign out info, and emergency info for students
    * create students, tutoring days, and contact information for tutors */
   const other = createNode('div', '', 'other-info', '');
-  
+
   const first = createNode('div', '', 'profile-other-card', '');
   const second = createNode('div', '', 'profile-other-card', '');
   const third = createNode('div', '', 'profile-other-card', '');
@@ -515,7 +541,7 @@ function createOtherInfo(data, isStudent) {
   }
   second.appendChild(secondHead);
   second.appendChild(secondInfo);
-  
+
   const thirdHead = createNode('div', '', 'profile-other-header',
     isStudent ? 'Emergency Contacts' : 'Contact');
 
