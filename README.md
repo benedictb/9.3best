@@ -1,5 +1,4 @@
 # 9.3best
-you already know what it is
 
 # Backend Setup
 - Make sure you have python2 installed
@@ -50,3 +49,14 @@ There should be a hello world page
 	`show databases;`
 - You should now see roll call listed in your databases
 - Add rollcall as the databse name in rollcall.config
+
+### Installing the Java Application
+
+- To run the fingerpoint demo, you must first install Java and the Java SDK from 
+[Oracle](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+- Then, you must install the UareU drivers and SDK for the fingerprint scanner. Professor Metoyer has the login information and link for downloading.
+
+- After installing, add the library to your Java path. Then, run the demo code to ensure that the drivers are working correctly.
+
+- Finally, with the fingerprint scanner plugged in, run the main method from in the class `UareU.java`.
