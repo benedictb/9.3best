@@ -320,7 +320,9 @@ function createTutorRosterTable(data) {
       this.innerHTML = this.innerHTML === '+' ? '-' : '+';
       const btsn = document.getElementsByClassName('expand-button');
       for (let b of btsn) {
-        b.click();
+        if (b.innerHTML !== this.innerHTML) {
+          b.click();
+        }
       }
     }));
   table.appendChild(headRow);
